@@ -30,6 +30,7 @@ $(document).ready(function() {
         count = 0; // Resets to original value 
         $('#count').text(count); // Set this to print on screen
         $('#guessList').empty(); // Use .empty() to clear a <ul>
+        guessArray.empty();
         $('h2#feedback').text('Make your Guess!')
     }
 
@@ -72,10 +73,6 @@ $(document).ready(function() {
         }
 
         console.log('You submitted ' + input);
-
-
-
-
 
 
         function continueGame() {
