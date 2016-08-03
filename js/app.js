@@ -1,164 +1,114 @@
-//initialize variables
-'use strict';
-var secretNumber, 
-userGuess, 
-pastGuesses = [], 
-count,
-guessHtml, 
-userFeedback,
-alreadyGuessed,
-newButton,
-form ,
-input,
-feedback,
-countElement,
-guessList;
+$(document).ready(function() {
 
-$(document).ready(pageLoad);
 
- function pageLoad(){
-	
-	/*--- Display information modal box ---*/
-  	$('.what').click(function(){
-    	$('.overlay').fadeIn(1000);
-  	});
-  	/*--- Hide information modal box ---*/
-  	$('a.close').click(function(){
-  		$('.overlay').fadeOut(1000);
-  	});
+    /*--- Display information modal box ---*/
+    $(".what").click(function() {
+        $(".overlay").fadeIn(1000);
 
-  	//fetch dom objects
-  	newButton = $('a.new');
-  	form = $('form');
-  	input = form.find('#userGuess');
-  	feedback = $('#feedback');
-  	countElement = $('#count');
-  	guessList = $('#guessList');
-
-    //page load
-    newGame();
-    //event handlers
-    form.submit(function(event){
-      event.preventDefault();
-      getUserGuess();
     });
-    newButton.click(newGame);
-}
 
-//new game function
-function newGame(){
-	form.find('input[type=submit]').css('opacity','1');
-	resetVariables();
-	render();
-	generateNumber();
-}
+    /*--- Hide information modal box ---*/
+    $("a.close").click(function() {
+        $(".overlay").fadeOut(1000);
+    });
 
-//get the user guess
-function getUserGuess(){
-	//get the user guess
-	userGuess = input.val();
-	//reset input value
-	input.val('');
-	//focus on input for next guess
-	input.focus();
-	//ensure valid input
-	if(checkGuess()){return ;}
-	//generate feedback
-	generateFeedback();
-	//track the past user guesses
-	trackGuess();
-	//increment the count
-	guessCount();
-	//render changes to the page
-	render();
-}
-
-  	//check for valid input
-  	function checkGuess(){
-  		if(userGuess % 1 !== 0){
-  			alert('please input a number');
-  			return true;
-  		}
-  		if(userGuess < 0 || userGuess > 101){
-  			alert('please choose a number between zero and 100');
-  			return true;
-  		}
-  		if(pastGuesses.length > 0){
-			$.each(pastGuesses,function(guess,value){
-				if(userGuess == value){
-					alreadyGuessed = true;
-				}
-			}); 
-		}
-		if(alreadyGuessed){
-			alreadyGuessed = false;
-			alert('You guessed this number already');
-			return true;
-		}
-    return false;
-	}
-
-//generate user feedback
-function generateFeedback(){
-	if(secretNumber == userGuess){
-		winner();
-	} else if(Math.abs(secretNumber - userGuess) < 10){
-		userFeedback = 'hot';
-	} else if(Math.abs(secretNumber - userGuess) < 20 && Math.abs(secretNumber - userGuess) > 9){
-		userFeedback = ' Kinda hot';
-	} else if(Math.abs(secretNumber - userGuess) < 30 && Math.abs(secretNumber - userGuess) > 19){
-		userFeedback = 'less than warm';
-	} else {
-		userFeedback = 'cold';
-	}
-}
-
-//keep track of the users past guesses
-function trackGuess(){
-	pastGuesses.push(userGuess);
-	guessHtml = '';
-	if(pastGuesses[0].length) {
-		$.each(pastGuesses,function(guess,value){
-			guessHtml += '<li>' + value + '</li>';
-		});
-	}
-}
-
-//keep track of guess count
-function guessCount(){
-	count++;
-}
-
-	//page render function
-function render(){
-	guessList.html(guessHtml);
-	countElement.html(count);
-	feedback.html(userFeedback);
-}
-
-function winner(){
-	userFeedback = 'You Won. Click new game to play again';
-	form.find('input[type=submit]').css('opacity','0');
-}
-  	
-//generate secret number
-function generateNumber(){
-	secretNumber = Math.floor(Math.random()*100)+1;
-}
-
-//reset variable 
-function resetVariables(){
-	count = 0;
-	pastGuesses = [];
-	guessHtml='';
-	userGuess = '';
-	userFeedback = 'Make your Guess!';
-}
-  	
-  	
-
-  
+    var secretNum;
+    // randomNum() must be called before var plusFive and minusFive
+    // are defined so that secretNum is == to a number before it is placed in plusFive, minusFive.  
+    // If not, secretNum within plusFive/minusFive = NaN.  
+    // In the hot or cold section, input > NaN always evaluates to false.
+    randomNum();
+    var count = 0;
+    var plusFive = 0; // undefined + 5
+    var minusFive = 0;
+    var guessArray = [];
 
 
 
+    function newGame() {
+        randomNum();
+        count = 0; // Resets to original value 
+        $('#count').text(count); // Set this to print on screen
+        $('#guessList').empty(); // Use .empty() to clear a <ul>
+        guessArray = [];
+        plusFive = 0;
+        minusFive = 0;
+        $('h2#feedback').text('Make your Guess!')
+    }
 
+    function randomNum() {
+        secretNum = Math.floor((Math.random() * 100) + 1);
+        console.log('You generated a random number.')
+        console.log(secretNum);
+    }
+
+    $('.new').click(function() {
+        newGame();
+        console.log('You clicked New Game.')
+    });
+
+
+    $('form').submit(function(event) {
+        event.preventDefault();
+        var input = parseInt($('#userGuess').val(), 10); // Submit the form, parse the actual input number
+        // check to see whether input exists in some guesses array.
+        // if it is not there, then push it to the global array
+
+        $('#userGuess').val("");
+
+        // Checks if a user guess exists in array,
+        // if indexOf = -1 it does not exist and therefore pushes input to array.
+        if (guessArray.indexOf(input) == -1) {  
+            guessArray.push(input); 
+
+            // true or false = true; false or true = true, false or false = false
+            plusFive = secretNum + 5;
+            minusFive = secretNum - 5;
+            
+            console.log(plusFive, '+5');
+            console.log(minusFive, '-5');
+            console.log(input, 'input');
+            if (input == secretNum) {
+                win();
+
+            } else if (((input > secretNum) && (input <= plusFive)) || ((input < secretNum) && (input >= minusFive))) {
+                hot();
+                continueGame();
+            } else {
+                cold();
+                continueGame();
+            };
+        } else {
+            $('h2#feedback').text("Don't repeat yourself!");
+        }
+
+        console.log('You submitted ' + input);
+
+
+        function continueGame() {
+            $('ul#guessList').append('<li>' + input + '</li>');
+            count++; // Increments the count number 
+            $('#count').text(count); // Set this to print on screen
+        };
+
+    });
+
+
+    function hot() {
+        $('h2#feedback').text("You're hot!");
+
+    };
+
+    function cold() {
+        $('h2#feedback').text("You're cold!")
+
+    };
+
+    function win() {
+        $('h2#feedback').text('Congrats!  You won! Click "New Game" to play again.');
+    };
+
+    
+
+
+});
