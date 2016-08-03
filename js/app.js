@@ -19,8 +19,8 @@ $(document).ready(function() {
     // In the hot or cold section, input > NaN always evaluates to false.
     randomNum();
     var count = 0;
-    var plusFive = secretNum + 5; // undefined + 5
-    var minusFive = secretNum - 5;
+    var plusFive = 0; // undefined + 5
+    var minusFive = 0;
     var guessArray = [];
 
 
@@ -30,14 +30,16 @@ $(document).ready(function() {
         count = 0; // Resets to original value 
         $('#count').text(count); // Set this to print on screen
         $('#guessList').empty(); // Use .empty() to clear a <ul>
-        guessArray.empty();
+        guessArray = [];
+        plusFive = 0;
+        minusFive = 0;
         $('h2#feedback').text('Make your Guess!')
     }
 
     function randomNum() {
         secretNum = Math.floor((Math.random() * 100) + 1);
         console.log('You generated a random number.')
-            //console.log(secretNum);
+        console.log(secretNum);
     }
 
     $('.new').click(function() {
@@ -59,8 +61,16 @@ $(document).ready(function() {
         if (guessArray.indexOf(input) == -1) {  
             guessArray.push(input); 
 
+            // true or false = true; false or true = true, false or false = false
+            plusFive = secretNum + 5;
+            minusFive = secretNum - 5;
+            
+            console.log(plusFive, '+5');
+            console.log(minusFive, '-5');
+            console.log(input, 'input');
             if (input == secretNum) {
                 win();
+
             } else if (((input > secretNum) && (input <= plusFive)) || ((input < secretNum) && (input >= minusFive))) {
                 hot();
                 continueGame();
