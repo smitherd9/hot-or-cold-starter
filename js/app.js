@@ -12,6 +12,10 @@ $(document).ready(function() {
         $(".overlay").fadeOut(1000);
     });
 
+
+    ///////           Global Variables              ///////
+
+
     var secretNum;
     // randomNum() must be called before var plusFive and minusFive
     // are defined so that secretNum is == to a number before it is placed in plusFive, minusFive.  
@@ -22,6 +26,16 @@ $(document).ready(function() {
     var plusFive = 0; // undefined + 5
     var minusFive = 0;
     var guessArray = [];
+    
+
+    ////    Function Expressions for creating feedback    ////
+
+    var hot = createFeedback('Your\'re hot!');
+    var cold = createFeedback('Your\'re cold!');
+    var repeat = createFeedback('Don\'t repeat yourself!');
+    var win = createFeedback('Congrats!  You won! Click "New Game" to play again.');
+    var makeGuess = createFeedback('Make Your Guess!')
+    var notNumber = createFeedback('Please Input a Number.')
 
 
 
@@ -33,7 +47,8 @@ $(document).ready(function() {
         guessArray = [];
         plusFive = 0;
         minusFive = 0;
-        $('h2#feedback').text('Make your Guess!')
+        makeGuess();
+        // $('h2#feedback').text('Make your Guess!')
     }
 
     function randomNum() {
@@ -41,6 +56,14 @@ $(document).ready(function() {
         console.log('You generated a random number.')
         console.log(secretNum);
     }
+
+    function createFeedback(message){
+        return function() {
+            $('h2#feedback').text(message);
+        };
+    }
+
+
 
     $('.new').click(function() {
         newGame();
@@ -68,7 +91,13 @@ $(document).ready(function() {
             console.log(plusFive, '+5');
             console.log(minusFive, '-5');
             console.log(input, 'input');
-            if (input == secretNum) {
+
+            if (isNaN(input)){
+                notNumber();
+                // $('h2#feedback').text("Please input a number.");
+            }
+
+            else if (input == secretNum) {
                 win();
 
             } else if (((input > secretNum) && (input <= plusFive)) || ((input < secretNum) && (input >= minusFive))) {
@@ -79,7 +108,8 @@ $(document).ready(function() {
                 continueGame();
             };
         } else {
-            $('h2#feedback').text("Don't repeat yourself!");
+            repeat();
+            // $('h2#feedback').text("Don't repeat yourself!");
         }
 
         console.log('You submitted ' + input);
@@ -94,19 +124,19 @@ $(document).ready(function() {
     });
 
 
-    function hot() {
-        $('h2#feedback').text("You're hot!");
+    // function hot() {
+    //     $('h2#feedback').text("You're hot!");
 
-    };
+    // };
 
-    function cold() {
-        $('h2#feedback').text("You're cold!")
+    // function cold() {
+    //     $('h2#feedback').text("You're cold!")
 
-    };
+    // };
 
-    function win() {
-        $('h2#feedback').text('Congrats!  You won! Click "New Game" to play again.');
-    };
+    // function win() {
+    //     $('h2#feedback').text('Congrats!  You won! Click "New Game" to play again.');
+    // };
 
     
 
