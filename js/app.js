@@ -19,14 +19,8 @@ $(document).ready(function() {
 
 
     var secretNum;
-    // randomNum() must be called before var plusFive and minusFive
-    // are defined so that secretNum is == to a number before it is placed in plusFive, minusFive.  
-    // If not, secretNum within plusFive/minusFive = NaN.  
-    // In the hot or cold section, input > NaN always evaluates to false.
     randomNum();
     var count = 0;
-    // var plusFive = 0; // undefined + 5
-    // var minusFive = 0;
     var guessArray = [];
     var inputValue;
 
@@ -42,6 +36,8 @@ $(document).ready(function() {
 
 
 
+    // Handles game reset in order to play again
+
     function newGame() {
         randomNum();
         count = 0; // Resets to original value 
@@ -51,66 +47,65 @@ $(document).ready(function() {
         // plusFive = 0;
         // minusFive = 0;
         makeGuess();
-        
+
     }
+
+
+    // Generates a random number from 1 to 100 and assigns it to secretNum
 
     function randomNum() {
         secretNum = Math.floor((Math.random() * 100) + 1);
         console.log('You generated a random number.');
-        console.log(secretNum);
+        // console.log(secretNum);
     }
 
-    function createFeedback(message){
+
+    // Creates user feedback messages and places them in h2#feedback
+
+    function createFeedback(message) {
         return function() {
             $('h2#feedback').text(message);
         };
     }
+
+
+    // Gets value of input from user 
 
     function getInput() {
         var input = parseInt($('#userGuess').val(), 10);
         inputValue = input;
         $('#userGuess').val("");
         console.log('You submitted ' + input);
-        
+
     }
 
-    function checkGuessArray(input) {
-        if (guessArray.indexOf(inputValue) == -1) {  
-            guessArray.push(inputValue); 
 
-            // plusFive = secretNum + 5;
-            // minusFive = secretNum - 5;
-            
-            // console.log(plusFive, '+5');
-            // console.log(minusFive, '-5');
+    // Checks if a user guess exists in array,
+    // if indexOf = -1 it does not exist and therefore pushes input to array.
+
+    function checkGuessArray(input) {
+        if (guessArray.indexOf(inputValue) == -1) {
+            guessArray.push(inputValue);
             console.log(inputValue, 'input');
 
-    } else {
+        } else {
             repeat();
         }
     }
 
 
     function checkUserGuess(input) {
-        if (isNaN(inputValue)){
-                notNumber();                
-            }
-            else if (inputValue == secretNum) {
-                win();
-            } else if (Math.abs(inputValue - secretNum) <= 5){
-                hot();
-                continueGame();
-            } else {
-                cold();
-                continueGame();
-            }    
-
-            // } else if (((input > secretNum) && (input <= plusFive)) || ((input < secretNum) && (input >= minusFive))) {
-            //     hot();
-            //     continueGame();
-            // } else {
-            //     cold();
-            //     continueGame();
+        if (isNaN(inputValue)) {
+            notNumber();
+        } else if (inputValue == secretNum) {
+            win();
+        } else if (Math.abs(inputValue - secretNum) <= 5) {
+            hot();
+            continueGame();
+        } else {
+            cold();
+            continueGame();
+        }
     }
 
 
@@ -127,55 +122,18 @@ $(document).ready(function() {
         checkGuessArray();
         checkUserGuess();
 
-        // var input = parseInt($('#userGuess').val(), 10); // Submit the form, parse the actual input number
-        
-        // $('#userGuess').val("");
-
-        // Checks if a user guess exists in array,
-        // if indexOf = -1 it does not exist and therefore pushes input to array.
-        // if (guessArray.indexOf(input) == -1) {  
-        //     guessArray.push(input); 
-
-        //     // true or false = true; false or true = true, false or false = false
-        //     plusFive = secretNum + 5;
-        //     minusFive = secretNum - 5;
-            
-        //     console.log(plusFive, '+5');
-        //     console.log(minusFive, '-5');
-        //     console.log(input, 'input');
-
-        //     if (isNaN(input)){
-        //         notNumber();
-                
-        //     }
-
-        //     else if (input == secretNum) {
-        //         win();
-
-        //     } else if (((input > secretNum) && (input <= plusFive)) || ((input < secretNum) && (input >= minusFive))) {
-        //         hot();
-        //         continueGame();
-        //     } else {
-        //         cold();
-        //         continueGame();
-        //     };
-        // } else {
-        //     repeat();
-            
-        });
-
-        // console.log('You submitted ' + input);
+    });
 
 
-        function continueGame() {
-            $('ul#guessList').append('<li>' + inputValue + '</li>');
-            count++; // Increments the count number 
-            $('#count').text(count); // Set this to print on screen
-        };
+    function continueGame() {
+        $('ul#guessList').append('<li>' + inputValue + '</li>');
+        count++; // Increments the count number 
+        $('#count').text(count); // Set this to print on screen
+    };
 
-      
 
-    
+
+
 
 
 });
